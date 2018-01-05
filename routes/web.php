@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', 'ContactsController@index');
-Route::get('new', 'ContactsController@newUser');
-Route::get('edit/{id}', 'ContactsController@editUser');
+Route::get('/', 'ContactsController@index')->name('index');
+Route::get('new', 'ContactsController@newContact')->name('new_contact');
+Route::get('edit/{id}', 'ContactsController@editContact')->name('edit_contact');
 
-Route::delete('delete', 'ContactsController@delete');
-Route::post('add', 'ContactsController@add');
-Route::post('update', 'ContactsController@update');
+Route::delete('delete', 'ContactsController@delete')->name('delete');
+Route::post('add', 'ContactsController@add')->name('add');
+Route::post('update', 'ContactsController@update')->name('update');

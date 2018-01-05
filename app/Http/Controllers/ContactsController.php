@@ -26,17 +26,16 @@ class ContactsController extends Controller
         }
 
         return view('index', [
-
             'contacts' => $contacts
         ]);
     }
 
-    public function newUser(Request $request)
+    public function newContact(Request $request)
     {
         return view('new_user');
     }
 
-    public function editUser(Request $request, $id)
+    public function editContact(Request $request, $id)
     {
         $contact = Contact::find($id);
 
@@ -49,15 +48,15 @@ class ContactsController extends Controller
     {
         $id = $request->id;
 
-        DB::table('phones')->where('contact_id','=', $id)->delete();
-        DB::table('contacts')->where('id','=', $id)->delete();
+        Phone::where('contact_id','=', $id)->delete();
+        Contact::where('id','=', $id)->delete();
 
         return redirect('/');
     }
 
     public function add(Request $request)
     {
-        $id = DB::table('contacts')->insertGetId([
+        $contact = Contact::create([
             'surname' => $request->surname,
             'name' => $request->name,
             'patronymic' => $request->patronymic,
@@ -69,11 +68,11 @@ class ContactsController extends Controller
             $phones = explode(',', $request->phones);
 
             foreach($phones as $phone){
-                DB::table('phones')->insert([
-                    'contact_id' => $id,
+                Phone::create([
+                    'contact_id' => $contact->id,
                     'phone' => trim($phone),
                     'created_at' => new \Datetime(),
-                    'updated_at' => new \Datetime(),                    
+                    'updated_at' => new \Datetime(),                         
                 ]);
             }
         }
@@ -87,7 +86,7 @@ class ContactsController extends Controller
 
         $contact = Contact::find($id);
 
-        DB::table('contacts')->where('id', $id)
+        Contact::where('id', $id)
             ->update([
             'surname' => $request->surname,
             'name' => $request->name,
@@ -98,10 +97,10 @@ class ContactsController extends Controller
         if ($request->has('phones')) {
             $phones = explode(',', $request->phones);
 
-            DB::table('phones')->where('contact_id','=', $id)->delete();
+            Phone::where('contact_id','=', $id)->delete();
 
             foreach($phones as $phone){
-                DB::table('phones')->insert([
+                Phone::create([
                     'contact_id' => $id,
                     'phone' => trim($phone),
                     'created_at' => new \Datetime(),
